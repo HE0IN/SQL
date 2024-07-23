@@ -684,3 +684,19 @@ BEGIN
 END $$
 DELIMITER ;
 CALL multiple_table();
+#ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+DROP PROCEDURE IF EXISTS multiple_table;
+DELIMITER $$
+CREATE PROCEDURE multiple_table(IN input_num INT)
+BEGIN
+    DROP TABLE IF EXISTS numbers;
+    CREATE TABLE numbers (num INT);
+
+    INSERT INTO numbers (num) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9);
+    SELECT input_num AS "단", num AS "곱해지는 수", (input_num * num) AS "구구단 결과"
+    FROM numbers;
+END$$
+DELIMITER ;
+
+CALL multiple_table(5);
