@@ -390,17 +390,12 @@ DROP TABLE member;
 CREATE TABLE member
 (mem_id char(8) not null primary key,
 mem_name varchar(10) not null,
-mem_nember int not null,
+mem_number int not null,
 addr char(2) not null,
 phone1 char(3),
-phone char(8),
+phone2 char(8),
 height smallint,
 debut_date date);
-
-ALTER TABLE member 
-CHANGE COLUMN mem_nember mem_number INT NOT NULL,
-CHANGE COLUMN phone phone2 CHAR(8);
-
 
 INSERT INTO member VALUES('APN', '에이핑크', 6, '경기', '031', '77777777', 164, '2011.02.10');
 INSERT INTO member VALUES('BLK', '블랙핑크', 4, '경남', '055', '22222222', 163, '2016.08.08');
@@ -412,6 +407,13 @@ INSERT INTO member VALUES('RED', '레드벨벳', 4, '경북', '054', '55555555',
 INSERT INTO member VALUES('SPC', '우주소녀', 13, '서울', '02', '88888888', 162, '2016.02.25');
 insert into member values('TWC', '트와이스', 9, '서울', '02', '11111111', 167, '2015.10.19');
 INSERT INTO member VALUES('WMN', '여자친구', 6, '경기', '031', '33333333', 166, '2015.01.15');
+
+ALTER TABLE member 
+CHANGE COLUMN mem_nember mem_number INT NOT NULL,
+CHANGE COLUMN phone phone2 CHAR(8);
+
+
+
 
 SELECT * FROM member;
 

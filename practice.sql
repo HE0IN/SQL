@@ -686,9 +686,9 @@ DELIMITER ;
 CALL multiple_table();
 #ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
-DROP PROCEDURE IF EXISTS multiple_table;
+DROP PROCEDURE IF EXISTS multiple;
 DELIMITER $$
-CREATE PROCEDURE multiple_table(IN input_num INT)
+CREATE PROCEDURE multiple(IN input_num INT)
 BEGIN
     DROP TABLE IF EXISTS numbers;
     CREATE TABLE numbers (num INT);
@@ -699,4 +699,52 @@ BEGIN
 END$$
 DELIMITER ;
 
-CALL multiple_table(5);
+CALL multiple(5);
+
+#ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+DROP PROCEDURE IF EXISTS multiple;
+DELIMITER $$
+CREATE PROCEDURE multiple(IN input_num INT)
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DROP TABLE IF EXISTS numbers;
+    CREATE TABLE numbers (num INT);
+
+    WHILE i <= 9 DO
+        INSERT INTO numbers (num) VALUES (i);
+        SET i = i + 1;
+    END WHILE;
+
+    SELECT input_num AS "단", num AS "곱해지는 수", (input_num * num) AS "구구단 결과"
+    FROM numbers;
+END$$
+DELIMITER ;
+
+CALL multiple(5);
+
+#ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+DROP PROCEDURE IF EXISTS multiple_table;
+DELIMITER $$
+
+CREATE PROCEDURE multiple_table(IN input_num INT)
+BEGIN
+    DROP TABLE IF EXISTS numbers1;
+    DROP TABLE IF EXISTS numbers2;
+
+    CREATE TABLE numbers1 (num1 INT);
+    CREATE TABLE numbers2 (num2 INT);
+
+    INSERT INTO numbers1 (num1) VALUES (2), (3), (4), (5), (6), (7), (8), (9);
+    INSERT INTO numbers2 (num2) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9);
+
+    SELECT n1.num1 AS "단", n2.num2 AS "곱해지는 수", (n1.num1 * n2.num2) AS "구구단 결과"
+    FROM numbers1 n1
+    CROSS JOIN numbers2 n2
+    WHERE n1.num1 = input_num
+    ORDER BY n2.num2;
+END$$
+DELIMITER ;
+
+CALL multiple_table(7);
+
