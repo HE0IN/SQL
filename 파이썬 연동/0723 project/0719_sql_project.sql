@@ -1,40 +1,21 @@
--- 데이터베이스 생성
 CREATE DATABASE sql_project;
 
--- 데이터베이스 사용
-USE sql_project;
+use sql_project;
 
--- member 테이블 생성
-CREATE TABLE member (
-    mem_id CHAR(8) NOT NULL PRIMARY KEY,
-    mem_name VARCHAR(10) NOT NULL,
-    mem_number INT NOT NULL,
-    addr CHAR(2) NOT NULL,
-    phone1 CHAR(3),
-    phone2 CHAR(8),
-    height SMALLINT,
-    debut_date DATE
+drop table buy;
+drop table member;
+
+CREATE TABLE member
+(mem_id CHAR(8) NOT NULL PRIMARY KEY,
+mem_name VARCHAR(10) NOT NULL,
+mem_number INT NOT NULL,
+addr CHAR(2) NOT NULL,
+phone1 CHAR(3),
+phone2 CHAR(8),
+height SMALLINT,
+debut_date DATE
 );
 
--- buy 테이블 생성
-CREATE TABLE buy (
-    num INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    mem_id CHAR(8) NOT NULL,
-    pro_name CHAR(6) NOT NULL,
-    group_name CHAR(4),
-    price INT NOT NULL,
-    amount SMALLINT NOT NULL,
-    FOREIGN KEY (mem_id) REFERENCES member(mem_id)
-);
-
--- query_options 테이블 생성
-CREATE TABLE IF NOT EXISTS query_options (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    description VARCHAR(255),
-    query TEXT
-);
-
--- member 테이블에 데이터 삽입
 INSERT INTO member (mem_id, mem_name, mem_number, addr, phone1, phone2, height, debut_date) VALUES
 ('APN', '에이핑크', 6, '경기', '031', '77777777', 164, '2011-02-10'),
 ('BLK', '블랙핑크', 4, '경남', '055', '22222222', 163, '2016-08-08'),
@@ -47,20 +28,21 @@ INSERT INTO member (mem_id, mem_name, mem_number, addr, phone1, phone2, height, 
 ('TWC', '트와이스', 9, '서울', '02', '11111111', 167, '2015-10-19'),
 ('WMN', '여자친구', 6, '경기', '031', '33333333', 166, '2015-01-15');
 
--- buy 테이블에 데이터 삽입
-INSERT INTO buy (mem_id, pro_name, group_name, price, amount) VALUES
-('TWC', '지갑', NULL, 30, 2),
-('BLK', '맥북프로', '디지털', 1000, 1),
-('APN', '아이폰', '디지털', 200, 1),
-('MMU', '아이폰', '디지털', 200, 5),
-('BLK', '청바지', '패션', 50, 3),
-('MMU', '에어팟', '디지털', 80, 10),
-('GRL', '혼공SQL', '서적', 15, 5),
-('APN', '혼공SQL', '서적', 15, 2),
-('APN', '청바지', '패션', 50, 1),
-('MMU', '지갑', NULL, 30, 1),
-('APN', '혼공SQL', '서적', 15, 1),
-('MMU', '지갑', NULL, 30, 4);
+CREATE TABLE query_options (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(255) NOT NULL,
+    query TEXT NOT NULL
+);
+
+-- 데이터베이스 선택
+USE sql_project;
+
+-- query_options 테이블 생성 (존재하지 않는 경우)
+CREATE TABLE IF NOT EXISTS query_options (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(255),
+    query TEXT
+);
 
 -- query_options 테이블에 데이터 삽입
 INSERT INTO query_options (description, query) VALUES
@@ -84,3 +66,29 @@ INSERT INTO query_options (description, query) VALUES
  'SELECT mem_name "회원 이름", AVG(height) AS "평균 키" FROM member WHERE CHAR_LENGTH(mem_name) = 4 GROUP BY mem_name;'),
 ('⑩ 서적이 모두 환불 되었습니다. 서적을 구매한 회원 네임과 멤버의 전화번호, 환불할 총 구매 금액을 조회 하시오.',
  'SELECT M.mem_name "회원 이름", CONCAT(M.phone1, "-", M.phone2) AS "전화번호", SUM(B.price * B.amount) AS "환불 총 금액" FROM buy B INNER JOIN member M ON B.mem_id = M.mem_id WHERE B.group_name = "서적" GROUP BY M.mem_name, M.phone1, M.phone2;');
+
+
+
+CREATE TABLE buy
+(num INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+mem_id CHAR(8) NOT NULL,
+pro_name CHAR(6) NOT NULL,
+group_name CHAR(4),
+price INT NOT NULL,
+amount SMALLINT NOT NULL,
+FOREIGN KEY (mem_id) REFERENCES member(mem_id)
+);
+
+INSERT INTO buy (mem_id, pro_name, group_name, price, amount) VALUES
+('twc', '지갑', NULL, 30, 2),
+('BLK', '맥북프로', '디지털', 1000, 1),
+('APN', '아이폰', '디지털', 200, 1),
+('MMU', '아이폰', '디지털', 200, 5),
+('BLK', '청바지', '패션', 50, 3),
+('MMU', '에어팟', '디지털', 80, 10),
+('GRL', '혼공SQL', '서적', 15, 5),
+('APN', '혼공SQL', '서적', 15, 2),
+('APN', '청바지', '패션', 50, 1),
+('MMU', '지갑', NULL, 30, 1),
+('APN', '혼공SQL', '서적', 15, 1),
+('MMU', '지갑', NULL, 30, 4);
